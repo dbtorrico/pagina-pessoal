@@ -1,7 +1,7 @@
 # Roadmap
 
-**Current Milestone:** M1 — Estrutura Base + Visual Matrix
-**Status:** Planning
+**Current Milestone:** M4 completo — Deploy em andamento
+**Status:** Em produção (GitHub Pages)
 
 ---
 
