@@ -1,7 +1,7 @@
 # Save the Chicken Eggs — Tasks
 
 **Design:** `.specs/features/save-the-chicken-eggs/design.md`
-**Status:** Approved
+**Status:** Done — implementado e verificado na branch `feat/jogo-chicken-eggs`
 
 ---
 

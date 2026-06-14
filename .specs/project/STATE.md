@@ -19,7 +19,7 @@ _Atualizado: 2026-06-14_
 | M1 — Layout Matrix | Layout base, counter, deploy | ✅ Completo |
 | M2 — Poko Loko Lab | Grid de cards musicais/audiovisuais | ✅ Completo |
 | M3 — Jogos | Cards de jogos + Snake inline | ✅ Completo |
-| M3 — Jogos (Chicken Eggs) | Port do jogo pygame em estilo cartoon | 🚧 Em andamento (`feat/jogo-chicken-eggs`) |
+| M3 — Jogos (Chicken Eggs) | Port do jogo pygame em estilo cartoon | ✅ Completo (`feat/jogo-chicken-eggs`) |
 | M4 — Currículo | Timeline profissional + grid de skills | ✅ Completo |
 
 ---

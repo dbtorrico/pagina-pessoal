@@ -72,7 +72,7 @@
 - Placar de pontuação
 - Tela de game over com opção de reiniciar
 
-**Jogo Save the Chicken Eggs** - IN PROGRESS
+**Jogo Save the Chicken Eggs** - DONE
 
 - Port do jogo pygame `save-the-chicken-eggs` para JS/Canvas
 - Visual cartoon próprio (≠ Matrix, ≠ original)
