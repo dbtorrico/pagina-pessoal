@@ -505,98 +505,298 @@ const ChickenEggs = (function () {
     rafId = requestAnimationFrame(loop);
   }
 
-  // ===== Render (placeholder funcional — refinado p/ cartoon no T3) =====
-  function render(t) {
-    // céu
-    ctx.fillStyle = '#8ed0ff';
-    ctx.fillRect(0, 0, C.worldWidth, C.worldHeight);
+  // ===== Render cartoon =====
+  const FONT = "'Baloo 2', 'Comic Sans MS', 'Segoe UI', Arial, sans-serif";
 
-    // água (perigo)
-    ctx.fillStyle = '#2e86c1';
-    ctx.fillRect(0, C.waterSurfaceY, C.worldWidth, C.worldHeight - C.waterSurfaceY);
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
 
-    // portal (faixa direita)
-    const b = portalZoneBounds();
-    ctx.fillStyle = '#5b2a86';
-    ctx.fillRect(b.left, 0, C.portalStripWidth, C.worldHeight);
+  function hsv(h, s, v) {
+    h = ((h % 360) + 360) % 360 / 60;
+    const i = Math.floor(h), f = h - i;
+    const p = v * (1 - s), q = v * (1 - s * f), tt = v * (1 - s * (1 - f));
+    let r, g, b;
+    if (i % 6 === 0) { r = v; g = tt; b = p; }
+    else if (i === 1) { r = q; g = v; b = p; }
+    else if (i === 2) { r = p; g = v; b = tt; }
+    else if (i === 3) { r = p; g = q; b = v; }
+    else if (i === 4) { r = tt; g = p; b = v; }
+    else { r = v; g = p; b = q; }
+    return 'rgb(' + (r * 255 | 0) + ',' + (g * 255 | 0) + ',' + (b * 255 | 0) + ')';
+  }
 
-    // almofada
-    const box = pillowAabb(state.pillow);
-    ctx.fillStyle = '#ff6f91';
-    ctx.fillRect(box.left, box.top, C.pillowWidth, C.pillowHeight);
+  function drawSky() {
+    const g = ctx.createLinearGradient(0, 0, 0, C.waterSurfaceY);
+    g.addColorStop(0, '#5fc3ff');
+    g.addColorStop(1, '#c8efff');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, C.worldWidth, C.waterSurfaceY);
+  }
 
-    // ovos
-    state.eggs.forEach(function (egg) {
-      const sq = (eggSquash[egg.uid] || { s: 1 }).s;
-      ctx.save();
-      ctx.translate(egg.x, egg.y);
-      ctx.scale(1 / sq, sq);
-      ctx.fillStyle = '#fff6da';
+  function drawCloud(cx, cy, t, scale) {
+    const bob = Math.sin(t * 1.2 + cx * 0.01) * 5;
+    const blobs = [[-34, 4, 26], [0, -8, 34], [30, 2, 28], [60, 6, 22]];
+    ctx.fillStyle = '#ffffff';
+    blobs.forEach(function (b) {
       ctx.beginPath();
-      ctx.ellipse(0, 0, C.eggRadius * 0.85, C.eggRadius, 0, 0, Math.PI * 2);
+      ctx.arc(cx + b[0] * scale, cy + (b[1] + bob) * scale, b[2] * scale, 0, Math.PI * 2);
       ctx.fill();
-      ctx.restore();
     });
-
-    // HUD score central
-    ctx.fillStyle = '#ffe448';
-    ctx.font = 'bold 56px Arial';
-    ctx.textAlign = 'center';
-    if (state.status !== STATUS.WAITING_START) {
-      ctx.fillText(String(state.sessionScore), C.worldWidth * 0.5, C.worldHeight * 0.22);
-    }
-
-    // overlays simples
-    if (state.status === STATUS.WAITING_START) {
-      drawOverlayText('SAVE THE CHICKEN EGGS', 'Clique ou ENTER para começar');
-    } else if (state.status === STATUS.WON) {
-      drawOverlayText('VOCÊ ZEROU!', 'Pontos: ' + state.sessionScore);
-    }
   }
 
-  function drawOverlayText(title, msg) {
-    ctx.fillStyle = 'rgba(0,0,0,0.45)';
-    ctx.fillRect(0, 0, C.worldWidth, C.worldHeight);
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.font = 'bold 64px Arial';
-    ctx.fillText(title, C.worldWidth * 0.5, C.worldHeight * 0.45);
-    ctx.font = '32px Arial';
-    ctx.fillText(msg, C.worldWidth * 0.5, C.worldHeight * 0.45 + 56);
+  function drawWater(t) {
+    const top = C.waterSurfaceY;
+    const g = ctx.createLinearGradient(0, top, 0, C.worldHeight);
+    g.addColorStop(0, '#39b6e8');
+    g.addColorStop(1, '#1f7fb8');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, top, C.worldWidth, C.worldHeight - top);
+    // ondinha
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let x = 0; x <= C.worldWidth; x += 14) {
+      const y = top + 4 + Math.sin(x * 0.045 + t * 3) * 5;
+      if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
   }
 
-  // _step: executa a lógica de um frame sem rAF/render (uso em testes headless).
-  function testStep(dt, mx, opts) {
-    opts = opts || { mouseMoved: true };
-    mouseX = mx;
-    if (state.status === STATUS.WON) {
-      winTimer -= dt;
-      if (winTimer <= 0) startOrRestart();
-    } else {
-      const prev = state.status;
-      state = advanceState(state, mouseX, dt, opts);
-      pillowCenterX = state.pillow.centerX;
-      if (state.status === STATUS.WON && prev === STATUS.PLAYING) winTimer = 4.0;
-      if (state.status === STATUS.LOST) {
-        const kp = state.pillow;
-        state = initialState();
-        state.pillow = kp;
-        pillowCenterX = kp.centerX;
-        eggSquash = {};
+  function drawCoop(t) {
+    // morrinho
+    const shoreY = C.waterSurfaceY;
+    ctx.fillStyle = '#8a5a32';
+    ctx.beginPath();
+    ctx.moveTo(0, shoreY);
+    ctx.lineTo(300, shoreY);
+    ctx.lineTo(250, 150);
+    ctx.lineTo(0, 165);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#62c24a';
+    ctx.beginPath();
+    ctx.moveTo(0, shoreY - 6);
+    ctx.lineTo(300, shoreY - 6);
+    ctx.lineTo(250, 132);
+    ctx.lineTo(0, 148);
+    ctx.closePath();
+    ctx.fill();
+
+    // galinha cartoon
+    const bob = Math.sin(t * 3) * 4;
+    const cx = 120, cy = 250 + bob;
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'rgba(120,80,40,0.35)';
+    // corpo
+    ctx.fillStyle = '#f6d860';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 60, 50, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // cabeça
+    ctx.beginPath();
+    ctx.arc(cx + 40, cy - 42, 30, 0, Math.PI * 2);
+    ctx.fill();
+    // crista
+    ctx.fillStyle = '#e94f4f';
+    [[-10, -28], [4, -36], [18, -28]].forEach(function (p) {
+      ctx.beginPath();
+      ctx.arc(cx + 40 + p[0], cy - 42 + p[1], 11, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    // bico
+    ctx.fillStyle = '#f4922e';
+    ctx.beginPath();
+    ctx.moveTo(cx + 68, cy - 44);
+    ctx.lineTo(cx + 92, cy - 38);
+    ctx.lineTo(cx + 66, cy - 30);
+    ctx.closePath();
+    ctx.fill();
+    // olho
+    ctx.fillStyle = '#2a2a33';
+    ctx.beginPath();
+    ctx.arc(cx + 50, cy - 48, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    // asa batendo
+    const flap = Math.sin(t * 6) * 10;
+    ctx.fillStyle = '#eac84a';
+    ctx.beginPath();
+    ctx.ellipse(cx - 8, cy + 2 + flap * 0.2, 26, 18, flap * 0.02, 0, Math.PI * 2);
+    ctx.fill();
+    // patinhas
+    ctx.strokeStyle = '#d98b2b';
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(cx - 12, cy + 48); ctx.lineTo(cx - 14, cy + 64); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + 12, cy + 48); ctx.lineTo(cx + 14, cy + 64); ctx.stroke();
+  }
+
+  function drawPortal(t) {
+    const b = portalZoneBounds();
+    const w = C.portalStripWidth, x0 = b.left;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x0, 0, w, C.worldHeight);
+    ctx.clip();
+    // fundo
+    ctx.fillStyle = '#1a1038';
+    ctx.fillRect(x0, 0, w, C.worldHeight);
+    // espiral
+    const cx = x0 + w * 0.5, cy = C.worldHeight * 0.5;
+    const spin = t * 2.2;
+    for (let arm = 0; arm < 3; arm++) {
+      const phase = arm * (Math.PI * 2 / 3);
+      let prev = null;
+      ctx.lineWidth = 3;
+      for (let i = 1; i < 220; i++) {
+        const theta = spin + phase + i * 0.13;
+        const r = Math.min(0.85 * theta * 0.11 * 14, Math.max(w, C.worldHeight) * 0.62);
+        const x = cx + r * Math.cos(theta);
+        const y = cy + r * Math.sin(theta);
+        const hue = (i * 2.2 + arm * 40 + t * 90) % 360;
+        if (prev) {
+          ctx.strokeStyle = hsv(hue, 0.85, 0.98);
+          ctx.beginPath();
+          ctx.moveTo(prev[0], prev[1]);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+        prev = [x, y];
       }
     }
-    return debugState();
+    ctx.restore();
+    // moldura
+    ctx.strokeStyle = '#a98bff';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(x0 + 2, 2, w - 4, C.worldHeight - 4);
   }
 
-  function debugState() {
-    return {
-      status: state.status,
-      score: state.sessionScore,
-      level: state.level,
-      eggs: state.eggs.map(function (e) { return { x: e.x, y: e.y, vx: e.vx, vy: e.vy }; }),
-      pillow: state.pillow.centerX
-    };
+  function drawPillow(t) {
+    const box = pillowAabb(state.pillow);
+    const x = box.left, y = box.top, w = C.pillowWidth, h = C.pillowHeight;
+    // sombra
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    roundRect(x, y + 6, w, h, 16); ctx.fill();
+    // base
+    ctx.fillStyle = '#ff6f91';
+    roundRect(x, y, w, h, 16); ctx.fill();
+    // listras
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    for (let i = 0; i < w; i += 30) {
+      roundRect(x + i + 6, y + 6, 14, h - 12, 6); ctx.fill();
+    }
+    // contorno
+    ctx.strokeStyle = '#c84b6e';
+    ctx.lineWidth = 4;
+    roundRect(x, y, w, h, 16); ctx.stroke();
   }
 
-  return { init: init, stop: stop, _debug: debugState, _step: testStep };
+  function drawEgg(egg, hueShift) {
+    const sq = (eggSquash[egg.uid] || { s: 1 }).s;
+    ctx.save();
+    ctx.translate(egg.x, egg.y);
+    ctx.scale(1 / sq, sq);
+    const r = C.eggRadius;
+    // corpo (formato de ovo)
+    ctx.fillStyle = '#fff7e0';
+    ctx.strokeStyle = hsv(40 + hueShift * 12, 0.5, 0.7);
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(0, 2, r * 0.82, r * 1.02, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    // brilho
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.beginPath();
+    ctx.ellipse(-r * 0.28, -r * 0.4, r * 0.22, r * 0.32, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+    // rostinho
+    ctx.fillStyle = '#3a3340';
+    ctx.beginPath(); ctx.arc(-r * 0.28, 2, 2.4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(r * 0.28, 2, 2.4, 0, Math.PI * 2); ctx.fill();
+    // blush
+    ctx.fillStyle = 'rgba(255,140,160,0.6)';
+    ctx.beginPath(); ctx.arc(-r * 0.42, r * 0.34, 3.2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(r * 0.42, r * 0.34, 3.2, 0, Math.PI * 2); ctx.fill();
+    // sorriso
+    ctx.strokeStyle = '#3a3340';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.arc(0, r * 0.22, r * 0.22, 0.15 * Math.PI, 0.85 * Math.PI);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawHud() {
+    if (state.status === STATUS.PLAYING) {
+      // score central grande
+      ctx.textAlign = 'center';
+      ctx.font = '800 64px ' + FONT;
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = '#7a3b12';
+      ctx.fillStyle = '#ffe14a';
+      const sx = C.worldWidth * 0.5, sy = C.worldHeight * 0.2;
+      ctx.strokeText(String(state.sessionScore), sx, sy);
+      ctx.fillText(String(state.sessionScore), sx, sy);
+      // fase (canto esquerdo)
+      ctx.textAlign = 'left';
+      ctx.font = '700 26px ' + FONT;
+      ctx.fillStyle = '#2a3340';
+      ctx.fillText('Fase ' + state.level + '/' + C.maxLevel, 320, 40);
+      // recorde (canto direito, antes do portal)
+      ctx.textAlign = 'right';
+      ctx.fillText('Recorde: ' + highScore, C.worldWidth - C.portalStripWidth - 16, 40);
+    }
+  }
+
+  function drawOverlay(title, msg, sub) {
+    ctx.fillStyle = 'rgba(20,16,48,0.55)';
+    ctx.fillRect(0, 0, C.worldWidth, C.worldHeight);
+    ctx.textAlign = 'center';
+    const cx = C.worldWidth * 0.5, cy = C.worldHeight * 0.42;
+    ctx.font = '800 76px ' + FONT;
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = '#3a1d6e';
+    ctx.fillStyle = '#ffe14a';
+    ctx.strokeText(title, cx, cy);
+    ctx.fillText(title, cx, cy);
+    ctx.font = '600 34px ' + FONT;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(msg, cx, cy + 56);
+    if (sub) {
+      ctx.font = '500 24px ' + FONT;
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillText(sub, cx, cy + 96);
+    }
+  }
+
+  function render(t) {
+    drawSky();
+    drawCloud(C.worldWidth * 0.30, 80, t, 1.0);
+    drawCloud(C.worldWidth * 0.55, 120, t + 1.7, 0.8);
+    drawCloud(C.worldWidth * 0.78, 70, t + 0.5, 0.7);
+    drawWater(t);
+    drawCoop(t);
+    drawPortal(t);
+    drawPillow(t);
+    state.eggs.forEach(function (egg, i) { drawEgg(egg, i); });
+    drawHud();
+
+    if (state.status === STATUS.WAITING_START) {
+      drawOverlay('SAVE THE CHICKEN EGGS', 'Clique ou ENTER para começar',
+        'Mova a almofada com o mouse ou as setas ← →');
+    } else if (state.status === STATUS.WON) {
+      drawOverlay('VOCÊ ZEROU! 🥚', 'Pontos: ' + state.sessionScore + '  •  Recorde: ' + highScore,
+        'Recomeçando…');
+    }
+  }
+
+  return { init: init, stop: stop };
 })();
