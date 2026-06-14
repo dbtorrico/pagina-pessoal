@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TORRICO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="matrix-rain"></canvas>
+
+  <button id="hamburger" aria-label="Abrir menu">&#9776;</button>
+  <div id="overlay"></div>
+
+  <nav id="sidebar">
+    <div class="site-title">TORRICO</div>
+    <ul class="nav-links">
+      <li>
+        <a href="#" data-section="poko-loko-lab" class="active">&gt; Poko Loko Lab</a>
+      </li>
+      <li>
+        <a href="#" data-section="jogos">&gt; Jogos</a>
+      </li>
+      <li>
+        <a href="#" data-section="curriculo">&gt; Currículo</a>
+      </li>
+    </ul>
+    <div class="visitor-counter" id="visitor-counter">[VISITORS: ----]</div>
+  </nav>
+
+  <main id="content">
+    <section id="section-poko-loko-lab" class="section active">
+      <div class="poko-header">
+        <h1>Poko Loko Lab</h1>
+        <p>// projetos musicais e audiovisuais</p>
+      </div>
+
+      <div class="projects-grid">
+
+        <a class="project-card"
+           href="https://music.youtube.com/watch?v=OshMymt1hC8"
+           target="_blank"
+           rel="noopener noreferrer">
+          <div class="card-thumb">
+            <img
+              src="https://img.youtube.com/vi/OshMymt1hC8/maxresdefault.jpg"
+              alt="Capa de Fogo"
+              onerror="this.classList.add('error')">
+            <div class="thumb-fallback">▶</div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge">MÚSICA</span>
+            <div class="card-title">Fogo</div>
+            <div class="card-desc">Single autoral produzido pelo Torrico. Disponível no YouTube Music.</div>
+            <span class="card-link-hint">&gt; abrir no YouTube Music_</span>
+          </div>
+        </a>
+
+        <a class="project-card"
+           href="https://www.youtube.com/watch?v=Cr6ZKs-swM4"
+           target="_blank"
+           rel="noopener noreferrer">
+          <div class="card-thumb">
+            <img
+              src="https://img.youtube.com/vi/Cr6ZKs-swM4/maxresdefault.jpg"
+              alt="Capa de Faz Academia Pra Amarrar Bandana"
+              onerror="this.classList.add('error')">
+            <div class="thumb-fallback">▶</div>
+          </div>
+          <div class="card-body">
+            <span class="card-badge">AUDIOVISUAL</span>
+            <div class="card-title">Faz Academia Pra Amarrar Bandana</div>
+            <div class="card-desc">Música e clipe produzidos pelo Torrico. Um projeto audiovisual completo.</div>
+            <span class="card-link-hint">&gt; abrir no YouTube_</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section id="section-jogos" class="section">
+
+      <!-- View: Lista de jogos -->
+      <div id="jogos-list-view">
+        <div class="poko-header">
+          <h1>Jogos</h1>
+          <p>// jogos desenvolvidos pelo Torrico</p>
+        </div>
+        <div class="projects-grid">
+          <div class="project-card game-card" data-game="snake">
+            <div class="card-thumb snake-cover">
+              <div class="snake-cover-art">
+                <span>S</span><span>N</span><span>A</span><span>K</span><span>E</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <span class="card-badge">JOGO</span>
+              <div class="card-title">Snake</div>
+              <div class="card-desc">O clássico Snake com visual Matrix. Use as setas ou WASD para controlar a cobra.</div>
+              <span class="card-link-hint">&gt; jogar_</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View: Jogo ativo -->
+      <div id="jogos-game-view">
+        <div class="game-header">
+          <button id="btn-back-jogos">&lt; Voltar</button>
+          <span class="game-title-active">SNAKE</span>
+          <span id="snake-score-display">SCORE: 0000</span>
+        </div>
+        <div class="snake-canvas-wrapper">
+          <canvas id="snake-canvas"></canvas>
+          <div id="snake-overlay" class="snake-overlay">
+            <div class="overlay-content">
+              <div id="overlay-title">SNAKE</div>
+              <div id="overlay-message">Pressione ENTER para iniciar</div>
+              <div id="overlay-score"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="section-curriculo" class="section">
+      <h1>Currículo</h1>
+      <p>// Em construção...</p>
+    </section>
+  </main>
+
+  <script src="js/matrix-rain.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/counter.js"></script>
+  <script src="js/snake.js"></script>
+  <script src="js/jogos.js"></script>
+</body>
+</html>
