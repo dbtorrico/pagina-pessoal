@@ -106,16 +106,16 @@
         </div>
       </div>
 
-      <!-- View: Jogo ativo -->
+      <!-- View: Jogo ativo (genérico, compartilhado entre jogos) -->
       <div id="jogos-game-view">
         <div class="game-header">
           <button id="btn-back-jogos">&lt; Voltar</button>
-          <span class="game-title-active">SNAKE</span>
-          <span id="snake-score-display">SCORE: 0000</span>
+          <span class="game-title-active" id="game-title-active">SNAKE</span>
+          <span id="game-score-display">SCORE: 0000</span>
         </div>
-        <div class="snake-canvas-wrapper">
-          <canvas id="snake-canvas"></canvas>
-          <div id="snake-overlay" class="snake-overlay">
+        <div class="game-canvas-wrapper">
+          <canvas id="game-canvas"></canvas>
+          <div id="game-overlay" class="game-overlay">
             <div class="overlay-content">
               <div id="overlay-title">SNAKE</div>
               <div id="overlay-message">Pressione ENTER para iniciar</div>
@@ -255,6 +255,7 @@
   <script src="js/navigation.js"></script>
   <script src="js/counter.js"></script>
   <script src="js/snake.js"></script>
+  <script src="js/chicken-eggs.js"></script>
   <script src="js/jogos.js"></script>
 </body>
 </html>

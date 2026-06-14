@@ -145,7 +145,7 @@ const Snake = (function () {
   }
 
   function showOverlay(title, message, scoreText) {
-    var overlay = document.getElementById('snake-overlay');
+    var overlay = document.getElementById('game-overlay');
     var titleEl = document.getElementById('overlay-title');
     var msgEl = document.getElementById('overlay-message');
     var scoreEl = document.getElementById('overlay-score');
@@ -157,7 +157,7 @@ const Snake = (function () {
   }
 
   function hideOverlay() {
-    var overlay = document.getElementById('snake-overlay');
+    var overlay = document.getElementById('game-overlay');
     if (overlay) overlay.classList.add('hidden');
   }
 
