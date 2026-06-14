@@ -24,8 +24,8 @@
     }
   }
 
-  // Event listeners nos links de navegação
-  navLinks.forEach(function(link) {
+  // Event listeners nos links de navegação (sidebar + links internos com data-section)
+  document.querySelectorAll('[data-section]').forEach(function(link) {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       showSection(this.dataset.section);

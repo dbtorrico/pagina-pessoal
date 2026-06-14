@@ -1,4 +1,7 @@
 (function() {
+  // Animação desabilitada — fundo estático preto
+  return;
+
   // Respeita prefers-reduced-motion — se ativado, não inicia a animação
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
