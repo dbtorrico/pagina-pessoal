@@ -356,3 +356,145 @@ canvas#matrix-rain {
   opacity: 0.8;
   color: var(--color-white-char);
 }
+
+/* ===== JOGOS — Seção de Jogos ===== */
+
+#jogos-game-view {
+  display: none;
+  flex-direction: column;
+}
+
+#jogos-game-view.active {
+  display: flex;
+}
+
+/* Capa CSS do Snake */
+.snake-cover {
+  background: #050a05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.snake-cover-art {
+  display: flex;
+  gap: 6px;
+}
+
+.snake-cover-art span {
+  font-size: 2.5rem;
+  color: #00FF41;
+  text-shadow: 0 0 12px #00FF41, 0 0 24px rgba(0, 255, 65, 0.5);
+  animation: snake-letter-pulse 2s ease-in-out infinite;
+}
+
+.snake-cover-art span:nth-child(1) { animation-delay: 0s; }
+.snake-cover-art span:nth-child(2) { animation-delay: 0.2s; }
+.snake-cover-art span:nth-child(3) { animation-delay: 0.4s; }
+.snake-cover-art span:nth-child(4) { animation-delay: 0.6s; }
+.snake-cover-art span:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes snake-letter-pulse {
+  0%, 100% { opacity: 1; text-shadow: 0 0 12px #00FF41, 0 0 24px rgba(0, 255, 65, 0.5); }
+  50% { opacity: 0.3; text-shadow: none; }
+}
+
+/* Card de jogo clicável */
+.game-card {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Header do jogo ativo */
+.game-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-green-dim);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#btn-back-jogos {
+  background: transparent;
+  border: 1px solid var(--color-green-dim);
+  color: var(--color-green);
+  font-family: var(--font-main);
+  font-size: 1.3rem;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.2s, text-shadow 0.2s, color 0.2s;
+}
+
+#btn-back-jogos:hover {
+  border-color: var(--color-green);
+  color: var(--color-white-char);
+  text-shadow: 0 0 8px var(--color-green);
+}
+
+.game-title-active {
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px var(--color-green);
+  letter-spacing: 4px;
+  color: var(--color-white-char);
+}
+
+#snake-score-display {
+  font-size: 1.4rem;
+  opacity: 0.85;
+  letter-spacing: 2px;
+}
+
+/* Canvas wrapper */
+.snake-canvas-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+#snake-canvas {
+  display: block;
+  border: 1px solid var(--color-green-dim);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+}
+
+/* Overlay início / game over */
+.snake-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 10, 5, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.snake-overlay.hidden {
+  display: none;
+}
+
+.overlay-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#overlay-title {
+  font-size: 3rem;
+  color: var(--color-white-char);
+  text-shadow: 0 0 16px var(--color-green), 0 0 32px rgba(0, 255, 65, 0.4);
+  letter-spacing: 6px;
+}
+
+#overlay-message {
+  font-size: 1.4rem;
+  opacity: 0.8;
+}
+
+#overlay-score {
+  font-size: 1.8rem;
+  color: var(--color-white-char);
+  text-shadow: 0 0 10px var(--color-green);
+}
