@@ -1,5 +1,6 @@
 (function() {
-  const endpoint = 'https://api.countapi.xyz/hit/dbtorrico/pagina-pessoal';
+  // CountAPI saiu do ar; usamos Abacus (mesmo formato de resposta {"value": N}).
+  const endpoint = 'https://abacus.jasoncameron.dev/hit/dbtorrico-pagina-pessoal/visits';
   const display = document.getElementById('visitor-counter');
 
   if (!display) return;

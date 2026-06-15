@@ -48,9 +48,15 @@ _Atualizado: 2026-06-14_
 - Contador de visitantes estilo LED âmbar (`#ff8c00`)
 - Separadores `════════` e `─ ─ ─ ─` nos títulos
 
-**2026-06-14 — CountAPI como contador de visitantes**
+**2026-06-14 — CountAPI como contador de visitantes** _(descontinuado — ver abaixo)_
 - Endpoint: `https://api.countapi.xyz/hit/dbtorrico/pagina-pessoal`
 - Fallback: `[VISITORS: ----]` em caso de falha ou timeout de 5s
+
+**2026-06-15 — Contador migrado de CountAPI para Abacus**
+- Razão: `api.countapi.xyz` saiu do ar (serviço descontinuado) → contador exibia `[VISITORS: ----]`
+- Novo endpoint: `https://abacus.jasoncameron.dev/hit/dbtorrico-pagina-pessoal/visits`
+- Mesmo formato de resposta (`{"value": N}`) → só o endpoint mudou no `js/counter.js`; CORS `*` confirmado para `dbtorrico.github.io`
+- `/hit` incrementa a cada carregamento de página; existe `/get` para ler sem incrementar, se algum dia quisermos dedup por sessão
 
 ---
 
