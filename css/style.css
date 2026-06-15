@@ -475,6 +475,51 @@ canvas#matrix-rain {
   user-select: none;
 }
 
+/* Capa cartoon do Save the Chicken Eggs */
+.eggs-cover {
+  background: linear-gradient(180deg, #8ed0ff 0%, #bfe9ff 70%, #2e86c1 70%, #2e86c1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.eggs-cover-portal {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 80%;
+  border-radius: 8px;
+  background:
+    repeating-conic-gradient(from 0deg, #ff5bb0 0deg 30deg, #7b5bff 30deg 60deg, #00d4ff 60deg 90deg);
+  box-shadow: 0 0 18px rgba(123, 91, 255, 0.7);
+  animation: eggs-portal-spin 6s linear infinite;
+  opacity: 0.9;
+}
+
+@keyframes eggs-portal-spin {
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+.eggs-cover-egg {
+  width: 46px;
+  height: 58px;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #fff6da 45%, #ffe9a8 100%);
+  border: 3px solid #e0b860;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+  transform: rotate(-8deg);
+  animation: eggs-cover-bob 2.2s ease-in-out infinite;
+}
+
+@keyframes eggs-cover-bob {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-10px) rotate(6deg); }
+}
+
 /* Header do jogo ativo */
 .game-header {
   display: flex;
@@ -511,27 +556,29 @@ canvas#matrix-rain {
   color: var(--color-white-char);
 }
 
-#snake-score-display {
+#game-score-display {
   font-size: 1.4rem;
   opacity: 0.85;
   letter-spacing: 2px;
 }
 
 /* Canvas wrapper */
-.snake-canvas-wrapper {
+.game-canvas-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
 }
 
-#snake-canvas {
+#game-canvas {
   display: block;
   border: 1px solid var(--color-green-dim);
   box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+  max-width: 100%;
+  height: auto;
 }
 
 /* Overlay início / game over */
-.snake-overlay {
+.game-overlay {
   position: absolute;
   inset: 0;
   background: rgba(5, 10, 5, 0.88);
@@ -541,7 +588,7 @@ canvas#matrix-rain {
   text-align: center;
 }
 
-.snake-overlay.hidden {
+.game-overlay.hidden {
   display: none;
 }
 

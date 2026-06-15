@@ -64,13 +64,21 @@
 - Click no card abre/carrega o jogo ou navega para a página do jogo
 - Layout em grid consistente com o visual Matrix
 
-**Jogo Snake** - PLANNED
+**Jogo Snake** - DONE
 
 - Snake clássico jogável inline na página (canvas JS)
 - Visual Matrix: fundo preto, cobra e comida em verde neon
 - Controles: setas ou WASD
 - Placar de pontuação
 - Tela de game over com opção de reiniciar
+
+**Jogo Save the Chicken Eggs** - DONE
+
+- Port do jogo pygame `save-the-chicken-eggs` para JS/Canvas
+- Visual cartoon próprio (≠ Matrix, ≠ original)
+- Galinha lança ovos em arco; almofada (mouse/setas) rebate até o portal
+- 10 fases, perde na água, tela de vitória, recorde via localStorage
+- Spec: `.specs/features/save-the-chicken-eggs/`
 
 ---
 

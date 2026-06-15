@@ -103,19 +103,32 @@
               <span class="card-link-hint">&gt; jogar_</span>
             </div>
           </div>
+
+          <div class="project-card game-card" data-game="eggs">
+            <div class="card-thumb eggs-cover">
+              <div class="eggs-cover-portal"></div>
+              <div class="eggs-cover-egg"></div>
+            </div>
+            <div class="card-body">
+              <span class="card-badge">JOGO</span>
+              <div class="card-title">Save the Chicken Eggs</div>
+              <div class="card-desc">Rebata os ovos com a almofada e leve-os até o portal dimensional. Mouse ou setas ←/→. 10 fases!</div>
+              <span class="card-link-hint">&gt; jogar_</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- View: Jogo ativo -->
+      <!-- View: Jogo ativo (genérico, compartilhado entre jogos) -->
       <div id="jogos-game-view">
         <div class="game-header">
           <button id="btn-back-jogos">&lt; Voltar</button>
-          <span class="game-title-active">SNAKE</span>
-          <span id="snake-score-display">SCORE: 0000</span>
+          <span class="game-title-active" id="game-title-active">SNAKE</span>
+          <span id="game-score-display">SCORE: 0000</span>
         </div>
-        <div class="snake-canvas-wrapper">
-          <canvas id="snake-canvas"></canvas>
-          <div id="snake-overlay" class="snake-overlay">
+        <div class="game-canvas-wrapper">
+          <canvas id="game-canvas"></canvas>
+          <div id="game-overlay" class="game-overlay">
             <div class="overlay-content">
               <div id="overlay-title">SNAKE</div>
               <div id="overlay-message">Pressione ENTER para iniciar</div>
@@ -255,6 +268,7 @@
   <script src="js/navigation.js"></script>
   <script src="js/counter.js"></script>
   <script src="js/snake.js"></script>
+  <script src="js/chicken-eggs.js"></script>
   <script src="js/jogos.js"></script>
 </body>
 </html>
